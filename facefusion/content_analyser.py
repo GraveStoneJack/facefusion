@@ -11,8 +11,8 @@ from facefusion.thread_helper import conditional_thread_semaphore
 from facefusion.typing import DownloadScope, Fps, InferencePool, ModelOptions, ModelSet, VisionFrame
 from facefusion.vision import detect_video_fps, get_video_frame, read_image
 
-PROBABILITY_LIMIT = 0.80
-RATE_LIMIT = 10
+PROBABILITY_LIMIT = 1.00
+RATE_LIMIT = 100
 STREAM_COUNTER = 0
 
 
@@ -74,10 +74,11 @@ def analyse_stream(vision_frame : VisionFrame, video_fps : Fps) -> bool:
 
 
 def analyse_frame(vision_frame : VisionFrame) -> bool:
-	vision_frame = prepare_frame(vision_frame)
-	probability = forward(vision_frame)
+	#vision_frame = prepare_frame(vision_frame)
+	#probability = forward(vision_frame)
 
-	return probability > PROBABILITY_LIMIT
+	#return probability > PROBABILITY_LIMIT
+	return False
 
 
 def forward(vision_frame : VisionFrame) -> float:
@@ -103,8 +104,9 @@ def prepare_frame(vision_frame : VisionFrame) -> VisionFrame:
 
 @lru_cache(maxsize = None)
 def analyse_image(image_path : str) -> bool:
-	vision_frame = read_image(image_path)
-	return analyse_frame(vision_frame)
+	#vision_frame = read_image(image_path)
+	#return analyse_frame(vision_frame)
+	return False
 
 
 @lru_cache(maxsize = None)
@@ -113,6 +115,7 @@ def analyse_video(video_path : str, trim_frame_start : int, trim_frame_end : int
 	frame_range = range(trim_frame_start, trim_frame_end)
 	rate = 0.0
 	counter = 0
+	return False
 
 	with tqdm(total = len(frame_range), desc = wording.get('analysing'), unit = 'frame', ascii = ' =', disable = state_manager.get_item('log_level') in [ 'warn', 'error' ]) as progress:
 		for frame_number in frame_range:
